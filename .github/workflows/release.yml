@@ -87,6 +87,8 @@ jobs:
   build-macos:
     if: github.event_name == 'release' || inputs.platform == 'all' || inputs.platform == 'macos'
     runs-on: macos-15
+    env:
+      MACOSX_DEPLOYMENT_TARGET: "11.0"
     steps:
       - name: Check out release source
         uses: actions/checkout@v4
