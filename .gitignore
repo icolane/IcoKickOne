@@ -1,0 +1,5 @@
+/build/
+/.tools/
+/cmake-build-*/
+/.vscode/
+*.user
