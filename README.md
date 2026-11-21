@@ -59,3 +59,15 @@ The style selector chooses a starting character. Use the exposed controls to
 shape it further; use Randomize for a new parameter variation. The nine module
 switches are independently automatable. Saved plugin state is restored by Live
 when the set is reopened.
+
+## Download
+
+The Windows x64 VST3 release is available on the
+[GitHub Releases page](https://github.com/icolane/IcoKickOne/releases/latest).
+Extract `IcoKickOne.vst3` from the ZIP into a VST3 folder scanned by your DAW.
+The ZIP also contains this README and the license.
+
+## License
+
+IcoKickOne is licensed under the GNU Affero General Public License v3.0 or later
+(AGPL-3.0-or-later). See [LICENSE](LICENSE) for the full license text.

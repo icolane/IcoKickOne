@@ -1,0 +1,75 @@
+name: Build Windows VST3 release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Git tag or branch to build
+        required: true
+        default: v1.0
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Check out release source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.source_ref }}
+          path: source
+
+      - name: Check out release documentation
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: metadata
+
+      - name: Set up MinGW-w64
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            git
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-ninja
+
+      - name: Build VST3
+        shell: msys2 {0}
+        run: |
+          cd source
+          cmake --preset windows-mingw-release
+          cmake --build --preset windows-mingw-release
+
+      - name: Package release
+        shell: pwsh
+        env:
+          SOURCE_REF: ${{ inputs.source_ref }}
+        run: |
+          $tag = if ($env:GITHUB_EVENT_NAME -eq "release") { $env:GITHUB_REF_NAME } else { $env:SOURCE_REF }
+          $bundle = Join-Path $env:GITHUB_WORKSPACE "source/build/IcoKickOne_artefacts/Release/VST3/IcoKickOne.vst3"
+          if (-not (Test-Path $bundle)) {
+            throw "VST3 bundle not found: $bundle"
+          }
+          $package = Join-Path $env:RUNNER_TEMP "IcoKickOne"
+          New-Item -ItemType Directory -Force -Path $package | Out-Null
+          Copy-Item -Recurse $bundle -Destination $package
+          Copy-Item (Join-Path $env:GITHUB_WORKSPACE "metadata/LICENSE") $package
+          Copy-Item (Join-Path $env:GITHUB_WORKSPACE "metadata/README.md") $package
+          Compress-Archive -Path (Join-Path $package "*") -DestinationPath "IcoKickOne-$tag-windows-x64.zip" -Force
+
+      - name: Upload to GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_REF: ${{ inputs.source_ref }}
+        run: |
+          $tag = if ($env:GITHUB_EVENT_NAME -eq "release") { $env:GITHUB_REF_NAME } else { $env:SOURCE_REF }
+          gh release upload $tag "IcoKickOne-$tag-windows-x64.zip" --repo $env:GITHUB_REPOSITORY --clobber
