@@ -62,10 +62,11 @@ when the set is reopened.
 
 ## Download
 
-The Windows x64 VST3 release is available on the
+The Windows x64 and universal macOS VST3 releases are available on the
 [GitHub Releases page](https://github.com/icolane/IcoKickOne/releases/latest).
 Extract `IcoKickOne.vst3` from the ZIP into a VST3 folder scanned by your DAW.
-The ZIP also contains this README and the license.
+The macOS build supports macOS 11 or later on both Intel and Apple Silicon.
+Each ZIP also contains this README and the license.
 
 ## License
 
