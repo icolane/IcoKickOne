@@ -12,8 +12,7 @@ IcoKickOne/
 ```
 
 IcoKickOne is an original VST3 kick instrument inspired by the general workflow
-shown in the linked kick-builder video. It is not a copy of that commercial
-plugin: it has its own interface and procedural DSP, and includes no borrowed
+It has its own interface and procedural DSP, and includes no borrowed
 samples, presets, artwork, or code.
 
 ## What it does
